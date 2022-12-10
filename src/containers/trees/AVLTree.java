@@ -46,31 +46,44 @@ public class AVLTree<T extends Comparable<T>> extends BinaryTree<T> {
 
     public class ReadOnlyAVLTreeIterator extends FindingAVLTreeIterator {
         @Override
-        public FindingAVLTreeIterator setNode(T data) {
+        public ReadOnlyAVLTreeIterator setNode(T data) {
             throw new IllegalAccessError();
         }
         @Override
-        public BinaryTree<T>.BinaryTreeIterator setData(T data) throws NullPointerException {
+        public ReadOnlyAVLTreeIterator setData(T data) throws NullPointerException {
             throw new IllegalAccessError();
         }
         @Override
-        public BinaryTree<T>.BinaryTreeIterator removeNode() {
+        public ReadOnlyAVLTreeIterator removeNode() {
             throw new IllegalAccessError();
         }
         @Override
-        public BinaryTree<T>.BinaryTreeIterator removeLeft() throws NullPointerException {
+        public ReadOnlyAVLTreeIterator removeLeft() throws NullPointerException {
             throw new IllegalAccessError();
         }
         @Override
-        public BinaryTree<T>.BinaryTreeIterator removeRight() throws NullPointerException {
+        public ReadOnlyAVLTreeIterator removeRight() throws NullPointerException {
             throw new IllegalAccessError();
         }
     }
 
     private class FindingAVLTreeIterator extends BinaryTreeIterator {
 
+        public FindingAVLTreeIterator find(T data) {
+            while (curNode != null && !curNode.data.equals(data)) {
+                if (curNode.data.compareTo(data) < 0)
+                    gotoRight();
+                else
+                    gotoLeft();
+            }
+            return this;
+        }
+    }
+
+    private class AVLTreeIterator extends FindingAVLTreeIterator {
+
         @Override
-        public FindingAVLTreeIterator setNode(T data) {
+        public AVLTreeIterator setNode(T data) {
             if (isNull()) {
                 if (isRoot()) {
                     curNode = root = new AVLNode<>(data);
@@ -94,19 +107,6 @@ public class AVLTree<T extends Comparable<T>> extends BinaryTree<T> {
             }
             return this;
         }
-
-        public FindingAVLTreeIterator find(T data) {
-            while (curNode != null && !curNode.data.equals(data)) {
-                if (curNode.data.compareTo(data) < 0)
-                    gotoRight();
-                else
-                    gotoLeft();
-            }
-            return this;
-        }
-    }
-
-    private class AVLTreeIterator extends FindingAVLTreeIterator {
 
         public void insert(T data) {
             find(data);
