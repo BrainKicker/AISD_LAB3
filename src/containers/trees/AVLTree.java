@@ -130,8 +130,10 @@ public class AVLTree<T extends Comparable<T>> extends BinaryTree<T> {
             find(data);
             if (isNull())
                 gotoParent();
-            whereToPaste.data = getData();
-            removeNode();
+            if (curNode != whereToPaste) {
+                whereToPaste.data = getData();
+                removeNode();
+            }
         }
 
         private void balance() {
