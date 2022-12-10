@@ -120,19 +120,37 @@ public class AVLTree<T extends Comparable<T>> extends BinaryTree<T> {
             find(data);
             if (isNull())
                 return;
-            findPrevValuePasteAndRemoveCopied(data);
+            findPrevValuePasteAndRemove(data);
             balance();
         }
 
-        private void findPrevValuePasteAndRemoveCopied(T data) {
-            Node<T> whereToPaste = curNode;
-            gotoLeft();
-            find(data);
-            if (isNull())
-                gotoParent();
-            if (curNode != whereToPaste) {
+        private void findPrevValuePasteAndRemove(T data) {
+            if (!hasLeft()) {
+                if (!hasRight()) {
+                    removeNode();
+                } else {
+                    curNode.data = curNode.right.data;
+                    removeRight();
+                    ((AVLNode<T>) curNode).fixHeight();
+                }
+            } else {
+                Node<T> whereToPaste = curNode;
+                gotoLeft();
+                find(data);
+                if (isNull())
+                    gotoParent();
                 whereToPaste.data = getData();
-                removeNode();
+                if (hasLeft()) {
+                    curNode.data = curNode.left.data;
+                    removeLeft();
+                    ((AVLNode<T>) curNode).fixHeight();
+                } else {
+                    removeNode();
+                }
+            }
+            if (!isRoot()) {
+                gotoParent();
+                ((AVLNode<T>) curNode).fixHeight();
             }
         }
 
